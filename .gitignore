@@ -1,0 +1,42 @@
+code
+tmp
+temp
+snap
+go
+VirtualBox VMs
+axial
+
+.cache
+.zoom
+.vscode/extensions
+.vagrant.d
+.docker 
+.dotnet
+.eclipse 
+.mozilla
+.gem 
+.kube/cache
+.grip/cache*
+
+.local/lib/python*
+.local/share*
+
+
+.config/Docker Desktop
+.config/Slack
+.config/VirtualBox
+.config/GitKraken
+.config/google*
+#.config/*/Code Cache
+#.config/*/Local Storage
+.config/Code
+#.config/Code/Cache*
+#.config/Code/Session*
+#.config/Code/Service*
+#.config/Code/Local*
+#.config/Code/User*
+#.config/Code/log*
+
+.config/1Password
+#.config/1Password/logs/
+#.config/1Password/Partitions
