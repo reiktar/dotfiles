@@ -9,7 +9,7 @@ AXIAL_SERVICES=(
     ["admin-app"]="${AXIAL_REPO}/src/services/admin-app.git/"
     ["authorization-service"]="${AXIAL_REPO}/src/services/authorization-service.git/"
     # ["axm"]="${AXIAL_REPO}/src/services/axm.git/"
-    # ["celery-scheduler"]="${AXIAL_REPO}/src/services/celery-scheduler.git/"
+    ["celery-scheduler"]="${AXIAL_REPO}/src/services/celery-scheduler.git/"
     ["deal-management-service"]="${AXIAL_REPO}/src/services/deal-management-service.git/"
     ["deals-lite-app"]="${AXIAL_REPO}/src/services/deals-lite-app.git/"
     ["document-service"]="${AXIAL_REPO}/src/services/document-service.git/"
@@ -36,7 +36,7 @@ AXIAL_SERVICES_DIR=(
     ["admin-app"]="${AXIAL_REPO}/src/services/admin-app.git/"
     ["authorization-service"]="${AXIAL_REPO}/src/services/authorization-service.git/"
     # ["axm"]="${AXIAL_REPO}/src/services/axm.git/"
-    # ["celery-scheduler"]="${AXIAL_REPO}/src/services/celery-scheduler.git/"
+    ["celery-scheduler"]="${AXIAL_REPO}/src/services/celery-scheduler.git/"
     ["deal-management-service"]="${AXIAL_REPO}/src/services/deal-management-service.git/"
     ["deals-lite-app"]="${AXIAL_REPO}/src/services/deals-lite-app.git/"
     ["document-service"]="${AXIAL_REPO}/src/services/document-service.git/"
@@ -76,7 +76,7 @@ forservice () {
     do
       [ $# -eq 0 ] && echo "${AXIAL_SERVICES_DIR[${service}]}" && continue
       [ -z "$QUIET" ] && echo -e "\n\e[32m$service\e[0m  -- ${AXIAL_SERVICES_DIR[${service}]}"
-      ( cd "${AXIAL_SERVICES_DIR[${service}]}"; "${@}" )
+      ( export SERVICE_NAME=$service ; cd "${AXIAL_SERVICES_DIR[${service}]}"; "${@}" )
     done
   )
 }
@@ -126,3 +126,17 @@ vstatus () {
 	  ) | column
 }
 alias wvstatus='watch -c -x bash -c "source /vagrant/axial_common.sh; vstatus"'
+alias st='local_stack'
+
+vault_refresh () {
+    VAULT_USER=markus
+    TOKEN=$(
+      export VAULT_ADDR='https://vault-kube.axialmarket.com' ;
+      export VAULT_TOKEN=$(op item get 'Axial - Master Vault' --fields password);
+      VAULT_POLICY=$(vault kv get -field='policy' secret/user/$VAULT_USER)
+      vault token create -ttl 24h -policy $VAULT_POLICY -field=token
+    )
+    export VAULT_TOKEN=$TOKEN
+    (op item edit 'Axial - Vault' "password=$TOKEN") 2>&1 >/dev/null
+}
+
