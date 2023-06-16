@@ -130,8 +130,8 @@ alias st='local_stack'
 
 vault_refresh () {
     VAULT_USER=markus
+    export VAULT_ADDR='https://vault-kube.axialmarket.com' ;
     TOKEN=$(
-      export VAULT_ADDR='https://vault-kube.axialmarket.com' ;
       export VAULT_TOKEN=$(op item get 'Axial - Master Vault' --fields password);
       VAULT_POLICY=$(vault kv get -field='policy' secret/user/$VAULT_USER)
       vault token create -ttl 24h -policy $VAULT_POLICY -field=token
